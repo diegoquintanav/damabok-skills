@@ -52,7 +52,7 @@ At every stage: the **markdown is the human-editable source of truth**, the JSON
 Each transition below is one delegated skill, with the schema it validates against and the template it follows:
 
 ```mermaid
-flowchart LR
+flowchart TD
     Repo(["Repo"]) --> C1["domain-business-modeling<br/>json: context.schema.json<br/>template: CONTEXT-FORMAT.md"]
     C1 --> CONTEXT["CONTEXT.md"]
     CONTEXT --> C2["context-lineage-generator<br/>json: context-lineage.schema.json<br/>template: CONTEXT-LINEAGE-FORMAT.md"]
