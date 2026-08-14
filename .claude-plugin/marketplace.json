@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "damabok-marketplace",
+  "owner": {
+    "name": "diegoquintanav"
+  },
+  "plugins": [
+    {
+      "name": "damabok",
+      "description": "Governance pipeline: CONTEXT.md -> CONTEXT_LINEAGE.md -> DAMA_ASSESSMENT.md -> OPENMETADATA_MAPPING.md.",
+      "source": "./",
+      "category": "data-governance"
+    }
+  ]
+}

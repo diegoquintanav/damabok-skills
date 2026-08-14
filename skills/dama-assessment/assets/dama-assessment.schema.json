@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://damabok.example.com/schemas/dama-assessment.schema.json",
+  "title": "DAMA Assessment",
+  "description": "DAMA-DMBOK classification generated from DAMA_ASSESSMENT.md by the dama-assessment skill. Consumed by openmetadata-mapper.",
+  "type": "object",
+  "required": ["schemaVersion", "sourceRepo", "generatedFrom", "classifications"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "dama-assessment-v1"
+    },
+    "sourceRepo": {
+      "type": "string",
+      "description": "Slug of the analyzed repository."
+    },
+    "generatedFrom": {
+      "type": "string",
+      "description": "The input artifact, normally \"CONTEXT_LINEAGE.md\"."
+    },
+    "classifications": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Exactly one entry per concept. Golden-record status is a flag on the entry, not a separate category.",
+      "items": {
+        "type": "object",
+        "required": ["stableId", "concept", "category", "confidence"],
+        "additionalProperties": false,
+        "properties": {
+          "stableId": {
+            "type": "string",
+            "pattern": "^concept:[a-z0-9_-]+$",
+            "description": "Join key; matches the concept's stableId in context-lineage.json."
+          },
+          "concept": { "type": "string" },
+          "category": {
+            "enum": ["master_data", "reference_data", "transactional_derived"]
+          },
+          "confidence": { "enum": ["High", "Medium", "Low"] },
+          "rationale": { "type": "string" },
+          "keyAssets": {
+            "type": "array",
+            "description": "Stable IDs of the assets that carry this concept.",
+            "items": { "type": "string" }
+          },
+          "goldenRecord": {
+            "type": "object",
+            "description": "Present only when the concept is reconciled across sources. Omit the key entirely otherwise.",
+            "required": ["recordType", "survivorshipModel"],
+            "additionalProperties": false,
+            "properties": {
+              "recordType": {
+                "enum": ["entity", "measurement"],
+                "description": "entity = MDM identity reconciliation; measurement = data-quality survivorship."
+              },
+              "sourceSystems": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "survivorshipModel": { "type": "string" },
+              "evidence": { "type": "string" },
+              "confidence": {
+                "enum": ["High", "Medium", "Low"],
+                "description": "Confidence in the golden-record flag, which may differ from confidence in the primary classification."
+              }
+            }
+          }
+        }
+      }
+    },
+    "glossarySuggestions": {
+      "type": "array",
+      "description": "Proposed new CONTEXT.md terms. Applied by domain-business-modeling, never written here.",
+      "items": {
+        "type": "object",
+        "required": ["term", "definition"],
+        "additionalProperties": false,
+        "properties": {
+          "term": { "type": "string" },
+          "definition": { "type": "string" },
+          "avoid": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "suggestedContext": {
+            "type": "string",
+            "description": "Which context or thematic group the term belongs in."
+          },
+          "confidence": { "enum": ["High", "Medium", "Low"] },
+          "status": {
+            "enum": ["proposed", "rejected"],
+            "description": "Absent means proposed. An accepted candidate is applied to CONTEXT.md and its row disappears, so only the rejection needs storing — and a rejected candidate is never re-asked."
+          }
+        }
+      }
+    },
+    "openQuestions": {
+      "type": "array",
+      "description": "Unresolved gate items, including vocabulary-absent candidates.",
+      "items": {
+        "type": "object",
+        "required": ["item"],
+        "additionalProperties": false,
+        "properties": {
+          "item": { "type": "string" },
+          "evidence": { "type": "string" },
+          "proposedCategory": {
+            "enum": ["master_data", "reference_data", "transactional_derived"]
+          }
+        }
+      }
+    },
+    "unknowns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "item": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    }
+  }
+}

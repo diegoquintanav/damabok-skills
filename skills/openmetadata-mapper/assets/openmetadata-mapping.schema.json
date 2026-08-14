@@ -1,0 +1,173 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://damabok.example.com/schemas/openmetadata-mapping.schema.json",
+  "title": "OpenMetadata Mapping",
+  "description": "Mapping from context-lineage concepts to OpenMetadata definitions, generated from OPENMETADATA_MAPPING.md by the openmetadata-mapper skill.",
+  "type": "object",
+  "required": ["schemaVersion", "openMetadataVersion", "sourceRepo", "generatedFrom", "glossaries"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "openmetadata-mapping-v1",
+      "description": "Shape of this artifact."
+    },
+    "openMetadataVersion": {
+      "const": "1.12",
+      "description": "OpenMetadata API version the payloads target."
+    },
+    "sourceRepo": {
+      "type": "string",
+      "description": "Slug of the analyzed repository."
+    },
+    "generatedFrom": {
+      "type": "string",
+      "description": "The primary input artifact, normally \"CONTEXT_LINEAGE.md\"."
+    },
+    "damaInput": {
+      "type": "string",
+      "description": "The DAMA artifact used for tagging, when one was available."
+    },
+    "glossaries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "displayName", "description", "terms"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$" },
+          "displayName": { "type": "string" },
+          "description": { "type": "string" },
+          "terms": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["name", "displayName", "description"],
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*$" },
+                "displayName": { "type": "string" },
+                "description": { "type": "string" },
+                "stableId": {
+                  "type": "string",
+                  "pattern": "^concept:[a-z0-9_-]+$",
+                  "description": "Join key back to the upstream concept."
+                },
+                "synonyms": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "relatedTerms": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["relationType", "termFqn"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "relationType": {
+                        "enum": ["broader", "narrower", "synonym", "relatedTo", "partOf", "hasPart", "antonym"]
+                      },
+                      "termFqn": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9_]+\\.([A-Za-z0-9_-]+)$"
+                      }
+                    }
+                  }
+                },
+                "references": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "url"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "name": { "type": "string" },
+                      "url": { "type": "string" }
+                    }
+                  }
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_]+\\.([A-Za-z0-9_]+)$"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "classifications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "displayName", "description", "tags"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$" },
+          "displayName": { "type": "string" },
+          "description": { "type": "string" },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "description"],
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$" },
+                "description": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "termAssetMappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["termFqn", "assets"],
+        "additionalProperties": false,
+        "properties": {
+          "termFqn": { "type": "string" },
+          "assets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["type", "name", "fullyQualifiedName", "role"],
+              "additionalProperties": false,
+              "properties": {
+                "type": { "enum": ["table", "column", "pipeline", "dashboard"] },
+                "name": { "type": "string" },
+                "fullyQualifiedName": { "type": "string" },
+                "role": { "enum": ["produces", "consumes", "transforms"] },
+                "evidence": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "unknownMappings": {
+      "type": "array",
+      "description": "Items the gate could not resolve. Absent when everything mapped cleanly.",
+      "items": {
+        "type": "object",
+        "required": ["type", "notes"],
+        "additionalProperties": false,
+        "properties": {
+          "type": { "type": "string" },
+          "reference": {
+            "type": "string",
+            "description": "Omit for notes that apply broadly rather than to one identifier."
+          },
+          "role": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

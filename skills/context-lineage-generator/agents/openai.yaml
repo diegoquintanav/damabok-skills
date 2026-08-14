@@ -1,0 +1,3 @@
+interface:
+  display_name: "Context Lineage Generator"
+  short_description: "Map CONTEXT.md concepts to data read/write points"

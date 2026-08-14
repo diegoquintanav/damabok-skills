@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "openmetadata": {
+      "type": "http",
+      "url": "https://your-openmetadata-server.example.com/mcp"
+    }
+  }
+}

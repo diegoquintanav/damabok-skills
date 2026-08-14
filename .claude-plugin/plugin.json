@@ -1,0 +1,16 @@
+{
+  "name": "damabok",
+  "version": "1.0.1",
+  "description": "Governance pipeline: CONTEXT.md -> CONTEXT_LINEAGE.md -> DAMA_ASSESSMENT.md -> OPENMETADATA_MAPPING.md. One orchestrator agent delegates to five skills, each with a schema-validated JSON companion.",
+  "author": {
+    "name": "diegoquintanav"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "data-governance",
+    "dama-dmbok",
+    "openmetadata",
+    "data-lineage",
+    "glossary"
+  ]
+}

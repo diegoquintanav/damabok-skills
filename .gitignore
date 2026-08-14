@@ -1,0 +1,14 @@
+.DS_Store
+*.log
+node_modules/
+__pycache__/
+*.pyc
+.vscode/
+
+# opencode local state is ignored, but the agent definitions are part of the repo.
+.opencode/*
+!.opencode/agents/
+!.opencode/agents/**
+
+# Same for Claude Code: agents and the skills symlink are tracked, local settings are not.
+.claude/settings.local.json

@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://damabok.example.com/schemas/context-lineage.schema.json",
+  "title": "Context Lineage",
+  "description": "Concept-to-data-asset inventory generated from CONTEXT_LINEAGE.md by the context-lineage-generator skill. Consumed by dama-assessment and openmetadata-mapper.",
+  "type": "object",
+  "required": ["schemaVersion", "sourceRepo", "generatedFrom", "concepts"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "context-lineage-v1"
+    },
+    "sourceRepo": {
+      "type": "string",
+      "description": "Slug of the analyzed repository."
+    },
+    "generatedFrom": {
+      "type": "string",
+      "description": "The input artifact, normally \"CONTEXT.md\"."
+    },
+    "concepts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["stableId", "concept"],
+        "additionalProperties": false,
+        "properties": {
+          "stableId": {
+            "type": "string",
+            "pattern": "^concept:[a-z0-9_-]+$",
+            "description": "Join key; matches the same concept's stableId in context.json."
+          },
+          "concept": {
+            "type": "string"
+          },
+          "dataPoints": {
+            "type": "array",
+            "description": "Where this concept is read or written. Absent when none were found.",
+            "items": {
+              "type": "object",
+              "required": ["stableId", "location", "kind", "direction", "confidence"],
+              "additionalProperties": false,
+              "properties": {
+                "stableId": {
+                  "type": "string",
+                  "description": "Prefixed asset ID, e.g. dbt_model:int_shipment_weight__pick_best."
+                },
+                "location": { "type": "string" },
+                "kind": {
+                  "enum": [
+                    "dbt_source",
+                    "dbt_model",
+                    "snapshot",
+                    "table",
+                    "view",
+                    "column",
+                    "exposure",
+                    "dag",
+                    "script",
+                    "api",
+                    "file",
+                    "ci",
+                    "env",
+                    "secret"
+                  ]
+                },
+                "direction": { "enum": ["consumes", "produces", "transforms"] },
+                "evidence": { "type": "string" },
+                "confidence": { "enum": ["High", "Medium", "Low"] }
+              }
+            }
+          },
+          "otherMentions": {
+            "type": "array",
+            "description": "Non-data references: docs, tests, comments.",
+            "items": {
+              "type": "object",
+              "required": ["stableId", "location", "kind"],
+              "additionalProperties": false,
+              "properties": {
+                "stableId": { "type": "string" },
+                "location": { "type": "string" },
+                "kind": { "type": "string" },
+                "evidence": { "type": "string" },
+                "confidence": { "enum": ["High", "Medium", "Low"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "terminologyDrift": {
+      "type": "array",
+      "description": "Avoided terms found in code, as candidates for domain-business-modeling to rule on at its next gate.",
+      "items": {
+        "type": "object",
+        "required": ["avoidedTerm", "stableId", "location"],
+        "additionalProperties": false,
+        "properties": {
+          "avoidedTerm": { "type": "string" },
+          "stableId": {
+            "type": "string",
+            "pattern": "^concept:[a-z0-9_-]+$",
+            "description": "The concept the avoided term refers to."
+          },
+          "location": { "type": "string" },
+          "suggestedAction": { "type": "string" },
+          "status": {
+            "enum": ["proposed", "rejected"],
+            "description": "Absent means proposed. An accepted candidate is applied to CONTEXT.md and its row disappears, so only the rejection needs storing — and a rejected candidate is never re-asked."
+          }
+        }
+      }
+    },
+    "unknowns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "item": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    }
+  }
+}

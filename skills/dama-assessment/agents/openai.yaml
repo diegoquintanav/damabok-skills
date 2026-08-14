@@ -1,0 +1,3 @@
+interface:
+  display_name: "DAMA Assessment"
+  short_description: "Classify concepts into DAMA-DMBOK categories"

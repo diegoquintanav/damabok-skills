@@ -1,0 +1,3 @@
+interface:
+  display_name: "OpenMetadata Mapper"
+  short_description: "Map CONTEXT_LINEAGE concepts to OpenMetadata v1.12"

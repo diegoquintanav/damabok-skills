@@ -1,0 +1,10 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "openmetadata": {
+      "type": "remote",
+      "url": "https://your-openmetadata-server.example.com/mcp",
+      "oauth": {}
+    }
+  }
+}
